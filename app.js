@@ -1,38 +1,43 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const connectDB = require('./db');
 const cors = require('cors');
-require('dotenv').config();
 const multer = require('multer');
-const storage = multer.memoryStorage(); 
-const upload = multer({ storage: storage });
-const mongoURI = process.env.MONGODB_URI;
-const Database = process.env.DB_NAME;
+require('dotenv').config();
 
-
+// Initialize Express App
 const app = express();
+
+// Define CORS options
+const corsOptions = {
+    origin: 'http://localhost:4000/api/bootleg-action-figures',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
 
 // Middleware to parse JSON and urlencoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors()); 
-app.post('/upload-image', upload.single('image'), (req, res) => {});
+app.use(cors());
 
-// MongoDB connection
-
-mongoose.connect(mongoURI);
-
-// Connect to Database
+// MongoDB Connection
+const connectDB = require('./db');
+mongoose.connect(process.env.MONGODB_URI);
 connectDB();
 
-// Import routes
-const bootlegActionFiguresRoutes = require('./routes/routebootlegactionfigure');
+// Multer for file uploads
+const storage = multer.memoryStorage(); 
+const upload = multer({ storage: storage });
 
+// Import controllers
+const bootlegActionFiguresController = require('./controllers/controllerbootlegactionfigure');
+
+// Apply multer route for file uploads
+// This route is specifically for uploading bootleg action figures with an image
+app.post('/api/bootleg-action-figures', upload.single('image'), bootlegActionFiguresController.createBootlegActionFigure);
+
+// Import and use other routes
+// Ensure these routes do not have a conflicting POST route for /bootleg-action-figures
 const authenticActionFiguresRoutes = require('./routes/routeauthenticactionfigure');
-
-
-// Use routes
-app.use('/api', bootlegActionFiguresRoutes);
 app.use('/api', authenticActionFiguresRoutes);
 
 // Error handling middleware

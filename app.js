@@ -32,6 +32,19 @@ const bootlegActionFiguresRoutes = require('./routes/routebootlegactionfigure');
 
 app.use('/api', bootlegActionFiguresRoutes);
 
+app.get('/images/:id', async (req, res) => {
+    try {
+        const figure = await BootlegActionFigure.findById(req.params.id);
+        if (!figure || !figure.image) {
+            throw new Error();
+        }
+        res.set('Content-Type', 'image/jpeg'); // Set appropriate content type
+        res.send(figure.image);
+    } catch (e) {
+        res.status(404).send();
+    }
+});
+
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');

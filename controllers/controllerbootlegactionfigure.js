@@ -1,7 +1,7 @@
 const BootlegActionFigure = require('../models/modelbootlegactionfigure');
 
 // Create a new Bootleg Action Figure
-exports.createBootlegActionFigure = async (req, res) => {
+/*exports.createBootlegActionFigure = async (req, res) => {
     try {
         const newFigure = new BootlegActionFigure(req.body);
         await newFigure.save();
@@ -9,7 +9,30 @@ exports.createBootlegActionFigure = async (req, res) => {
     } catch (error) {
         res.status(400).send(error);
     }
+};*/
+
+//TEST
+exports.createBootlegActionFigure = async (req, res) => {
+    try {
+        const imagePath = req.file ? req.file.path : ''; 
+
+        const newFigure = new BootlegActionFigure({ // Use a different variable name for the instance
+            FigureName: req.body.FigureName,
+            releaseDate: req.body.releaseDate,
+            Manufacturer: req.body.Manufacturer,
+            description: req.body.description,
+            image: imagePath
+        });
+
+        const savedFigure = await newFigure.save();
+        res.status(201).json(savedFigure);
+    } catch (err) {
+        res.status(400).json({ msg: err.message });
+    }
 };
+
+
+//TEST
 
 // Retrieve all Bootleg Action Figures
 exports.getAllBootlegActionFigures = async (req, res) => {

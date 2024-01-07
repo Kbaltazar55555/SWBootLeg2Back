@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const connectDB = require('./db');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -11,15 +12,22 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors()); // Enables CORS
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('Could not connect to MongoDB', err));
+
+// Connect to Database
+connectDB();
 
 // Import routes
 const bootlegActionFiguresRoutes = require('./routes/routebootlegactionfigure');
 
+const authenticActionFiguresRoutes = require('./routes/routeauthenticactionfigure');
+
+
 // Use routes
 app.use('/api', bootlegActionFiguresRoutes);
+app.use('/api', authenticActionFiguresRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -28,7 +36,7 @@ app.use((err, req, res, next) => {
 });
 
 // Define a port and start the server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

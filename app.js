@@ -39,13 +39,16 @@ app.get('/images/:id', async (req, res) => {
             return res.status(404).send('Image not found');
         }
 
-        // Assuming the buffer is stored in the 'image' field and is in JPEG format
-        res.set('Content-Type', 'image/jpeg');
-        res.send(figure.image);
+        // Convert the image buffer to a Base64 string
+        const imageBase64 = figure.image.toString('base64');
+
+        // Send the Base64 string in a JSON response
+        res.json({ image: imageBase64 });
     } catch (error) {
         res.status(500).send('Server error');
     }
 });
+
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

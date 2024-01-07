@@ -36,12 +36,14 @@ app.get('/images/:id', async (req, res) => {
     try {
         const figure = await BootlegActionFigure.findById(req.params.id);
         if (!figure || !figure.image) {
-            throw new Error();
+            return res.status(404).send('Image not found');
         }
-        res.set('Content-Type', 'image/jpeg'); // Set appropriate content type
+
+        // Assuming the buffer is stored in the 'image' field and is in JPEG format
+        res.set('Content-Type', 'image/jpeg');
         res.send(figure.image);
-    } catch (e) {
-        res.status(404).send();
+    } catch (error) {
+        res.status(500).send('Server error');
     }
 });
 

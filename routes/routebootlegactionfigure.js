@@ -18,4 +18,5 @@ router.put('/bootleg-action-figures/:id', bootlegActionFiguresController.updateB
 // DELETE request to delete a Bootleg Action Figure by ID
 router.delete('/bootleg-action-figures/:id', bootlegActionFiguresController.deleteBootlegActionFigure);
 
+
 module.exports = router;

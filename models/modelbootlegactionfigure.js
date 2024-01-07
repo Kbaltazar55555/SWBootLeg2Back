@@ -10,21 +10,17 @@ const bootlegActionFigureSchema = new mongoose.Schema({
     required: true
   },
   releaseDate: {
-    type: Date,
-    required: false
+    type: String, 
+    required: true
   },
   image: {
-    type: String,
+    type: Buffer,
     required: false
   },
   description: {
     type: String,
-    required: false
+    required: true
   },
-  isAuthentic: {
-    type: Boolean,
-    default: false
-  }
 });
 
 const BootlegActionFigure = mongoose.model('BootlegActionFigure', bootlegActionFigureSchema);

@@ -1,31 +1,27 @@
 const mongoose = require('mongoose');
 
 const authenticActionFigureSchema = new mongoose.Schema({
-  FigureName: {
-    type: String,
-    required: true
-  },
-  Manufacturer: {
-    type: String,
-    required: true
-  },
-  releaseDate: {
-    type: Date,
-    required: false
-  },
-  image: {
-    type: String,
-    required: false
-  },
-  description: {
-    type: String,
-    required: false
-  },
-  isAuthentic: {
-    type: Boolean,
-    default: true  // Set default to true for authentic figures
-  }
-});
+    FigureName: {
+        type: String,
+        required: true
+      },
+      Manufacturer: {
+        type: String,
+        required: true
+      },
+      releaseDate: {
+        type: String, 
+        required: true
+      },
+      image: {
+        type: Buffer,
+        required: false
+      },
+      description: {
+        type: String,
+        required: true
+      },
+    });
 
 const AuthenticActionFigure = mongoose.model('AuthenticActionFigure', authenticActionFigureSchema);
 

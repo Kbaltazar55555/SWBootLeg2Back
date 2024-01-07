@@ -3,18 +3,24 @@ const mongoose = require('mongoose');
 const connectDB = require('./db');
 const cors = require('cors');
 require('dotenv').config();
+const multer = require('multer');
+const storage = multer.memoryStorage(); 
+const upload = multer({ storage: storage });
+const mongoURI = process.env.MONGODB_URI;
+const Database = process.env.DB_NAME;
+
 
 const app = express();
 
 // Middleware to parse JSON and urlencoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors()); // Enables CORS
+app.use(cors()); 
+app.post('/upload-image', upload.single('image'), (req, res) => {});
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('Could not connect to MongoDB', err));
+
+mongoose.connect(mongoURI);
 
 // Connect to Database
 connectDB();

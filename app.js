@@ -9,15 +9,32 @@ const fs = require('fs');
 // Initialize Express App
 const app = express();
 
-// Middleware to parse JSON and urlencoded data
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+// Explicit CORS Options
+const corsOptions = {
+    origin: 'http://127.0.0.1:5500', // Your frontend server address
+    optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 
 // MongoDB Connection
 const connectDB = require('./db');
 mongoose.connect(process.env.MONGODB_URI);
 connectDB();
+
+// Configure Multer for File Uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage: storage });
+
+// Middleware to parse JSON and urlencoded data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Ensure the 'uploads' directory exists
 const dir = './uploads';

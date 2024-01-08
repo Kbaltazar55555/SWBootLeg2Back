@@ -10,40 +10,18 @@
     }
 };*/
 
-/*exports.createBootlegActionFigure = async (req, res) => {
-    try {
-        const imagePath = req.file ? req.file.path : ''; 
-
-        const newFigure = new BootlegActionFigure({ // Use a different variable name for the instance
-            FigureName: req.body.FigureName,
-            releaseDate: req.body.releaseDate,
-            Manufacturer: req.body.Manufacturer,
-            description: req.body.description,
-            image: imagePath
-        });
-
-        const savedFigure = await newFigure.save();
-        res.status(201).json(savedFigure);
-    } catch (err) {
-        res.status(400).json({ msg: err.message });
-    }
-};*/
-
 const BootlegActionFigure = require('../models/modelbootlegactionfigure');
 
 exports.createBootlegActionFigure = async (req, res) => {
     try {
-        let imageBuffer = null;
-        if (req.file) {
-            imageBuffer = req.file.buffer; // Accessing the buffer from the uploaded file
-        }
+        const imagePath = req.file ? req.file.path : ''; // Get the path of the uploaded file
 
         const newFigure = new BootlegActionFigure({
             FigureName: req.body.FigureName,
             releaseDate: req.body.releaseDate,
             Manufacturer: req.body.Manufacturer,
             description: req.body.description,
-            image: imageBuffer // Storing the buffer directly in the database
+            imagePath // Storing the path of the image
         });
 
         const savedFigure = await newFigure.save();
@@ -52,7 +30,6 @@ exports.createBootlegActionFigure = async (req, res) => {
         res.status(400).json({ msg: err.message });
     }
 };
-
 
 // Retrieve all Bootleg Action Figures
 exports.getAllBootlegActionFigures = async (req, res) => {

@@ -2,7 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const multer = require('multer');
+const path = require('path');
 require('dotenv').config();
+const fs = require('fs');
 
 // Initialize Express App
 const app = express();
@@ -17,44 +19,28 @@ const connectDB = require('./db');
 mongoose.connect(process.env.MONGODB_URI);
 connectDB();
 
-// Multer for file uploads
-const storage = multer.memoryStorage(); 
-const upload = multer({ storage: storage });
+// Ensure the 'uploads' directory exists
+const dir = './uploads';
+if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+}
 
-const bootlegActionFiguresController = require('./controllers/controllerbootlegactionfigure');
+// Serve images from the uploads directory
+app.use('/uploads', express.static('uploads'));
 
-app.post('/api/bootleg-action-figures', upload.single('image'), bootlegActionFiguresController.createBootlegActionFigure);
+// Import routes
+const bootlegActionFiguresRoutes = require('./routes/routebootlegactionfigure'); // Adjust the path as necessary
 
-const authenticActionFiguresRoutes = require('./routes/routeauthenticactionfigure');
-app.use('/api', authenticActionFiguresRoutes);
+// Use routes
+app.use('/api', bootlegActionFiguresRoutes); // This will prefix '/api' to all your routes
 
-const bootlegActionFiguresRoutes = require('./routes/routebootlegactionfigure');
-
-app.use('/api', bootlegActionFiguresRoutes);
-
-app.get('/images/:id', async (req, res) => {
-    try {
-        const figure = await BootlegActionFigure.findById(req.params.id);
-        if (!figure || !figure.image) {
-            return res.status(404).send('Image not found');
-        }
-
-        // Convert the image buffer to a Base64 string
-        const imageBase64 = figure.image.toString('base64');
-
-        // Send the Base64 string in a JSON response
-        res.json({ image: imageBase64 });
-    } catch (error) {
-        res.status(500).send('Server error');
-    }
-});
-
-
+// Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
 });
 
+// Server listening
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

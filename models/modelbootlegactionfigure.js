@@ -13,9 +13,9 @@ const bootlegActionFigureSchema = new mongoose.Schema({
     type: String, 
     required: true
   },
-  imagePath: { // Replacing 'image' field with 'imagePath'
+  imagePath: { 
     type: String,
-    required: false // Image upload might be optional
+    required: false 
   },
   description: {
     type: String,

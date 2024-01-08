@@ -6,12 +6,12 @@ const path = require('path');
 require('dotenv').config();
 const fs = require('fs');
 
-// Initialize Express App
+// Start Express App
 const app = express();
 
-// Explicit CORS Options
+// Explicit CORS Options for Base64
 const corsOptions = {
-    origin: 'http://127.0.0.1:5500', // Your frontend server address
+    origin: 'http://127.0.0.1:5500', 
     optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
@@ -21,7 +21,7 @@ const connectDB = require('./db');
 mongoose.connect(process.env.MONGODB_URI);
 connectDB();
 
-// Configure Multer for File Uploads
+//  Multer for Pics
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/');
@@ -32,17 +32,15 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Middleware to parse JSON and urlencoded data
+// Middleware 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Ensure the 'uploads' directory exists
 const dir = './uploads';
 if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
 }
 
-// Serve images from the uploads directory
 app.use('/uploads', express.static('uploads'));
 
 // Import routes

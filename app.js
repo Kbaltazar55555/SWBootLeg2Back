@@ -44,10 +44,10 @@ if (!fs.existsSync(dir)) {
 app.use('/uploads', express.static('uploads'));
 
 // Import routes
-const bootlegActionFiguresRoutes = require('./routes/routebootlegactionfigure'); // Adjust the path as necessary
+const bootlegActionFiguresRoutes = require('./routes/routebootlegactionfigure'); 
 
 // Use routes
-app.use('/api', bootlegActionFiguresRoutes); // This will prefix '/api' to all your routes
+app.use('/api', bootlegActionFiguresRoutes); 
 
 // Error handling middleware
 app.use((err, req, res, next) => {
